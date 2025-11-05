@@ -39,4 +39,31 @@ public class StoreController {
 
         return ResponseEntity.ok(res);
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse<StoreDetailData>> getStoreDetail(@PathVariable("id") Long storeId) {
+
+        DeliveryOption option1 = DeliveryOption.builder()
+                .type("STORE").label("가게배달").originalFee(1500).discountedFee(0).isDiscounted(true)
+                .badge("배민클럽은 무료배달").description("0~1,500원").build();
+
+        DeliveryOption option2 = DeliveryOption.builder()
+                .type("ALDDLE").label("알뜰배달").originalFee(2000).discountedFee(1000).isDiscounted(true)
+                .badge("가장 저렴해요").description("무료배달 1,000원").build();
+
+        DeliveryOption option3 = DeliveryOption.builder()
+                .type("SINGLE").label("한집배달").originalFee(2000).discountedFee(1000).isDiscounted(true)
+                .badge(null).description("1,000원").build();
+
+        StoreDetailData storeDetailData = StoreDetailData.builder()
+                .id(storeId).name("롯데리아 남성역점").rating(4.9).reviewCount(690).minOrderPrice(14000)
+                .distance(0.48).storeStatus("PREPARING").storeStatusLabel("준비 중이에요")
+                .categories(Arrays.asList("BURGER", "SET", "DESSERT"))
+                .deliveryOptions(Arrays.asList(option1, option2, option3))
+                .build();
+
+        ApiResponse<StoreDetailData> responseBody = ApiResponse.success("가게 상세 조회 성공", storeDetailData);
+
+        return ResponseEntity.ok(responseBody);
+    }
 }

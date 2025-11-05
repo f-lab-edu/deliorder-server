@@ -43,4 +43,34 @@ class StoreControllerTest {
 
                 .andExpect(jsonPath("$.data.stores[0].menus[0].name").value("하이 반반치킨"));
     }
+
+    @Test
+    @DisplayName("GET /api/v1/stores/{id} - 가게 상세 조회 성공")
+    void getStoreDetailSuccess() throws Exception {
+
+        Long STORE_ID = 1002L;
+
+        mockMvc.perform(get("/stores/{id}", STORE_ID)
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.message").value("가게 상세 조회 성공"))
+
+                .andExpect(jsonPath("$.data.id").value(STORE_ID))
+                .andExpect(jsonPath("$.data.name").value("롯데리아 남성역점"))
+                .andExpect(jsonPath("$.data.rating").value(4.9))
+                .andExpect(jsonPath("$.data.storeStatus").value("PREPARING"))
+
+                .andExpect(jsonPath("$.data.categories.length()").value(3))
+                .andExpect(jsonPath("$.data.categories[0]").value("BURGER"))
+
+                .andExpect(jsonPath("$.data.deliveryOptions.length()").value(3))
+                .andExpect(jsonPath("$.data.deliveryOptions[0].type").value("STORE"))
+                .andExpect(jsonPath("$.data.deliveryOptions[0].discountedFee").value(0))
+                .andExpect(jsonPath("$.data.deliveryOptions[0].badge").value("배민클럽은 무료배달"))
+                .andExpect(jsonPath("$.data.deliveryOptions[2].badge").doesNotExist());
+    }
 }
