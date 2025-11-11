@@ -1,76 +1,106 @@
 package com.deliorder.api.domain.store.api;
 
+import com.deliorder.api.common.dto.ApiResponse;
+import com.deliorder.api.domain.store.api.dto.DeliveryOption;
+import com.deliorder.api.domain.store.api.dto.StoreData;
+import com.deliorder.api.domain.store.api.dto.StoreDetailData;
+import com.deliorder.api.domain.store.api.dto.StoreItem;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import java.util.List;
 
-@WebMvcTest(StoreController.class)
+import static org.assertj.core.api.Assertions.assertThat;
+
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class StoreControllerTest {
 
     @Autowired
-    private MockMvc mockMvc;
+    private TestRestTemplate restTemplate;
 
     @Test
     @DisplayName("GET /api/v1/stores - 가게 목록 조회 성공")
     void getStoresSuccess() throws Exception {
-        String requestPath = "/stores?categoryId=1&sort=RATING_DESC&minOrderPrice=10000";
+        ResponseEntity<ApiResponse<StoreData>> response = restTemplate.exchange(
+                "/api/v1/stores?categoryId=1&sort=RATING_DESC&minOrderPrice=10000",
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<ApiResponse<StoreData>>() {}
+        );
 
-        mockMvc.perform(get(requestPath)
-                        .contentType(MediaType.APPLICATION_JSON)
-                )
-                .andDo(print())
-                .andExpect(status().isOk())
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
-                .andExpect(jsonPath("$.success").value(true))
-                .andExpect(jsonPath("$.message").value("가게 목록 조회 성공"))
+        ApiResponse<StoreData> body = response.getBody();
+        assertThat(body).isNotNull();
+        assertThat(body.isSuccess()).isTrue();
+        assertThat(body.getCode()).isEqualTo("OK");
+        assertThat(body.getMessage()).isEqualTo("가게 목록 조회 성공");
 
-                .andExpect(jsonPath("$.data.stores.length()").value(2))
-                .andExpect(jsonPath("$.data.hasNext").value(true))
+        assertThat(body.getData().getHasNext()).isTrue();
 
-                .andExpect(jsonPath("$.data.stores[0].id").value(1001))
-                .andExpect(jsonPath("$.data.stores[0].name").value("하이닭"))
-                .andExpect(jsonPath("$.data.stores[0].rating").value(4.9))
-                .andExpect(jsonPath("$.data.stores[0].discount.amount").value(3000))
+        List<StoreItem> stores = body.getData().getStores();
+        assertThat(stores).isNotNull();
+        assertThat(stores).isNotEmpty();
+        assertThat(stores).hasSize(2);
 
-                .andExpect(jsonPath("$.data.stores[0].menus[0].name").value("하이 반반치킨"));
+        assertThat(stores.getFirst().getId()).isEqualTo(1001);
+        assertThat(stores.getFirst().getName()).isEqualTo("하이닭");
+        assertThat(stores.getFirst().getRating()).isEqualTo(4.9);
+        assertThat(stores.getFirst().getDiscount().getAmount()).isEqualTo(3000);
+        assertThat(stores.getFirst().getMenus().getFirst().getName()).isEqualTo("하이 반반치킨");
+        assertThat(stores.getFirst().getMenus().getFirst().getPrice()).isEqualTo(19500);
     }
 
     @Test
     @DisplayName("GET /api/v1/stores/{id} - 가게 상세 조회 성공")
     void getStoreDetailSuccess() throws Exception {
-
         Long STORE_ID = 1002L;
+        ResponseEntity<ApiResponse<StoreDetailData>> response =
+                restTemplate.exchange(
+                        "/api/v1/stores/" + STORE_ID,
+                        HttpMethod.GET,
+                        null,
+                        new ParameterizedTypeReference<ApiResponse<StoreDetailData>>() {
+                        }
+                );
 
-        mockMvc.perform(get("/stores/{id}", STORE_ID)
-                        .contentType(MediaType.APPLICATION_JSON)
-                )
-                .andDo(print())
-                .andExpect(status().isOk())
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
-                .andExpect(jsonPath("$.success").value(true))
-                .andExpect(jsonPath("$.message").value("가게 상세 조회 성공"))
+        ApiResponse<StoreDetailData> body = response.getBody();
+        assertThat(body).isNotNull();
+        assertThat(body.isSuccess()).isTrue();
+        assertThat(body.getCode()).isEqualTo("OK");
+        assertThat(body.getMessage()).isEqualTo("가게 상세 조회 성공");
 
-                .andExpect(jsonPath("$.data.id").value(STORE_ID))
-                .andExpect(jsonPath("$.data.name").value("롯데리아 남성역점"))
-                .andExpect(jsonPath("$.data.rating").value(4.9))
-                .andExpect(jsonPath("$.data.storeStatus").value("PREPARING"))
+        StoreDetailData data = body.getData();
+        assertThat(data.getId()).isEqualTo(STORE_ID);
+        assertThat(data.getName()).isEqualTo("롯데리아 남성역점");
+        assertThat(data.getRating()).isEqualTo(4.9);
+        assertThat(data.getReviewCount()).isEqualTo(690);
+        assertThat(data.getMinOrderPrice()).isEqualTo(14000);
+        assertThat(data.getDistance()).isEqualTo(0.48);
+        assertThat(data.getStoreStatus()).isEqualTo("PREPARING");
+        assertThat(data.getStoreStatusLabel()).isEqualTo("준비 중이에요");
 
-                .andExpect(jsonPath("$.data.categories.length()").value(3))
-                .andExpect(jsonPath("$.data.categories[0]").value("BURGER"))
+        List<String> categories = data.getCategories();
+        assertThat(categories).isNotEmpty();
+        assertThat(categories).hasSize(3);
+        assertThat(categories.getFirst()).isEqualTo("BURGER");
 
-                .andExpect(jsonPath("$.data.deliveryOptions.length()").value(3))
-                .andExpect(jsonPath("$.data.deliveryOptions[0].type").value("STORE"))
-                .andExpect(jsonPath("$.data.deliveryOptions[0].discountedFee").value(0))
-                .andExpect(jsonPath("$.data.deliveryOptions[0].badge").value("배민클럽은 무료배달"))
-                .andExpect(jsonPath("$.data.deliveryOptions[2].badge").doesNotExist());
+        List<DeliveryOption> deliveryOptions = data.getDeliveryOptions();
+        assertThat(deliveryOptions).isNotEmpty();
+        assertThat(deliveryOptions).hasSize(3);
+        assertThat(deliveryOptions.getFirst().getType()).isEqualTo("STORE");
+        assertThat(deliveryOptions.getFirst().getLabel()).isEqualTo("가게배달");
+        assertThat(deliveryOptions.getFirst().getOriginalFee()).isEqualTo(1500);
+        assertThat(deliveryOptions.getFirst().getDiscountedFee()).isEqualTo(0);
+        assertThat(deliveryOptions.getFirst().getIsDiscounted()).isTrue();
     }
 }

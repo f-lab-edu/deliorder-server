@@ -1,35 +1,54 @@
 package com.deliorder.api.domain.store.api;
 
+import com.deliorder.api.common.dto.ApiResponse;
+import com.deliorder.api.domain.store.api.dto.CategoryData;
+import com.deliorder.api.domain.store.api.dto.CategoryItem;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.*;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.List;
 
-@WebMvcTest(CategoryController.class)
+import static org.assertj.core.api.Assertions.assertThat;
+
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class CategoryControllerTest {
 
+    @LocalServerPort
+    private int port;
+
     @Autowired
-    private MockMvc mockMvc;
+    private TestRestTemplate restTemplate;
 
     @Test
     @DisplayName("카테고리 목록 조회 성공")
     void getCategoriesSuccess() throws Exception{
-        mockMvc.perform(get("/categories")
-                        .contentType(MediaType.APPLICATION_JSON)
-                )
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.success").value(true))
-                .andExpect(jsonPath("$.message").value("카테고리 목록 조회 성공"))
-                .andExpect(jsonPath("$.data.categories.length()").value(3))
-                .andExpect(jsonPath("$.data.categories[0].type").value("CHICKEN"))
-                .andExpect(jsonPath("$.data.categories[0].label").value("치킨"));
+
+        ResponseEntity<ApiResponse<CategoryData>> response =
+                restTemplate.exchange(
+                        "/api/v1/categories",
+                        HttpMethod.GET,
+                        null,
+                        new ParameterizedTypeReference<ApiResponse<CategoryData>>() {}
+                );
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        ApiResponse<CategoryData> body = response.getBody();
+        assertThat(body).isNotNull();
+        assertThat(body.isSuccess()).isTrue();
+        assertThat(body.getCode()).isEqualTo("OK");
+        assertThat(body.getMessage()).isEqualTo("카테고리 목록 조회 성공");
+
+        List<CategoryItem> categories = body.getData().getCategories();
+        assertThat(categories).isNotEmpty();
+        assertThat(categories).hasSize(3);
+        assertThat(categories.getFirst().getType()).isEqualTo("CHICKEN");
+        assertThat(categories.getFirst().getLabel()).isEqualTo("치킨");
     }
 }
