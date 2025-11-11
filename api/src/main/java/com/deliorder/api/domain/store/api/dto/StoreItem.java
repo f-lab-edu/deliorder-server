@@ -12,7 +12,7 @@ public class StoreItem {
     @Getter
     @Builder
     public static class Discount {
-        private String label;
+        private String type;  // INSTANT / COUPON
         private Integer amount;
     }
 
@@ -33,6 +33,5 @@ public class StoreItem {
     private Double distance;
     private String deliveryTime;
     private Discount discount;
-    private List<String> badges;
     private List<MenuPreview> menus;
 }

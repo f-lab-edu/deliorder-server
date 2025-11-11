@@ -11,6 +11,4 @@ public class DeliveryOption {
     private Integer originalFee;
     private Integer discountedFee;
     private Boolean isDiscounted;
-    private String badge;
-    private String description;
 }
