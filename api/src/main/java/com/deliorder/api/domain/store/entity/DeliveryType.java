@@ -1,11 +1,11 @@
-package com.deliorder.api.domain.store.api.type;
+package com.deliorder.api.domain.store.entity;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum PickupType {
+public enum DeliveryType {
     ALDDLE("알뜰배달"),
     SINGLE("한집배달"),
     STORE("가게배달"),
