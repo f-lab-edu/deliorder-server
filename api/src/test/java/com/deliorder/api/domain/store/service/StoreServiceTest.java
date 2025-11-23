@@ -1,7 +1,6 @@
 package com.deliorder.api.domain.store.service;
 
-import com.deliorder.api.domain.store.entity.DeliveryOption;
-import com.deliorder.api.domain.store.entity.Store;
+import com.deliorder.api.domain.store.entity.*;
 import com.deliorder.api.domain.store.repository.StoreRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,25 +30,22 @@ class StoreServiceTest {
         //given
         List<DeliveryOption> deliveryOptions = List.of(
                 DeliveryOption.builder()
-                        .type("STORE")
+                        .type(DeliveryType.STORE)
                         .label("가게배달")
                         .originalFee(1500)
                         .discountedFee(0)
-                        .isDiscounted(true)
                         .build(),
                 DeliveryOption.builder()
-                        .type("ALDDLE")
+                        .type(DeliveryType.ALDDLE)
                         .label("알뜰배달")
                         .originalFee(2000)
                         .discountedFee(1000)
-                        .isDiscounted(true)
                         .build(),
                 DeliveryOption.builder()
-                        .type("SINGLE")
+                        .type(DeliveryType.SINGLE)
                         .label("한집배달")
                         .originalFee(2000)
                         .discountedFee(1000)
-                        .isDiscounted(true)
                         .build()
         );
 
@@ -59,9 +55,9 @@ class StoreServiceTest {
                 .rating(4.9)
                 .reviewCount(690)
                 .minOrderPrice(14000)
-                .discountType("INSTANT")
+                .discountType(DiscountType.INSTANT)
                 .discountAmount(3000)
-                .storeStatus("PREPARING")
+                .storeStatus(StoreStatus.BREAK)
                 .storeStatusLabel("준비 중이에요")
                 .address("서울특별시 동작구 사당로 200")
                 .latitude(37.484806)
