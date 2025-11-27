@@ -1,7 +1,6 @@
 package com.deliorder.api.service;
 
 import com.deliorder.api.entity.*;
-import com.deliorder.api.store.entity.*;
 import com.deliorder.api.repository.StoreRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

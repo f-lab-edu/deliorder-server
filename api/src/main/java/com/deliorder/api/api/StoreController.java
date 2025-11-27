@@ -2,7 +2,9 @@ package com.deliorder.api.api;
 
 import com.deliorder.api.api.dto.*;
 import com.deliorder.api.common.dto.ApiResponse;
-import com.deliorder.api.store.api.dto.*;
+import com.deliorder.api.entity.Store;
+import com.deliorder.api.service.StoreService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,7 +12,10 @@ import java.util.Arrays;
 
 @RestController
 @RequestMapping("/api/v1/stores")
+@RequiredArgsConstructor
 public class StoreController {
+
+    private final StoreService storeService;
 
     @GetMapping
     public ResponseEntity<ApiResponse<StoreData>> getStores(@ModelAttribute StoreFilterRequest filter) {
@@ -44,24 +49,12 @@ public class StoreController {
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<StoreDetailData>> getStoreDetail(@PathVariable("id") Long storeId) {
 
-        DeliveryOption option1 = DeliveryOption.builder()
-                .type("STORE").label("가게배달").originalFee(1500).discountedFee(0).isDiscounted(true).build();
-
-        DeliveryOption option2 = DeliveryOption.builder()
-                .type("ALDDLE").label("알뜰배달").originalFee(2000).discountedFee(1000).isDiscounted(true).build();
-
-        DeliveryOption option3 = DeliveryOption.builder()
-                .type("SINGLE").label("한집배달").originalFee(2000).discountedFee(1000).isDiscounted(true).build();
-
-        StoreDetailData storeDetailData = StoreDetailData.builder()
-                .id(storeId).name("롯데리아 남성역점").rating(4.9).reviewCount(690).minOrderPrice(14000)
-                .distance(0.48).storeStatus("PREPARING").storeStatusLabel("준비 중이에요")
-                .categories(Arrays.asList("BURGER", "SET", "DESSERT"))
-                .deliveryOptions(Arrays.asList(option1, option2, option3))
-                .build();
-
-        ApiResponse<StoreDetailData> responseBody = ApiResponse.success("가게 상세 조회 성공", storeDetailData);
+        Store store = storeService.findStore(storeId);
+        ApiResponse<StoreDetailData> responseBody = ApiResponse.success("가게 상세 조회 성공", StoreDetailData.from(store));
 
         return ResponseEntity.ok(responseBody);
     }
+
+//    @GetMapping("/{id}/menus")
+//    public ResponseEntity<ApiResponse<>>
 }

@@ -1,7 +1,7 @@
 package com.deliorder.api.api;
 
 import com.deliorder.api.common.dto.ApiResponse;
-import com.deliorder.api.api.dto.DeliveryOption;
+import com.deliorder.api.api.dto.DeliveryOptionDto;
 import com.deliorder.api.api.dto.StoreData;
 import com.deliorder.api.api.dto.StoreDetailData;
 import com.deliorder.api.api.dto.StoreItem;
@@ -94,7 +94,7 @@ class StoreControllerTest {
         assertThat(categories).hasSize(3);
         assertThat(categories.getFirst()).isEqualTo("BURGER");
 
-        List<DeliveryOption> deliveryOptions = data.getDeliveryOptions();
+        List<DeliveryOptionDto> deliveryOptions = data.getDeliveryOptions();
         assertThat(deliveryOptions).isNotEmpty();
         assertThat(deliveryOptions).hasSize(3);
         assertThat(deliveryOptions.getFirst().getType()).isEqualTo("STORE");
