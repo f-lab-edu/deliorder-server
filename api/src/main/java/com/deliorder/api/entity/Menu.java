@@ -6,6 +6,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @Builder
@@ -32,4 +35,8 @@ public class Menu {
     private int price;
 
     private String imgUrl;
+
+    @OneToMany(mappedBy = "menu")
+    @Builder.Default
+    private List<MenuOptionGroup> menuOptionGroups = new ArrayList<>();
 }
