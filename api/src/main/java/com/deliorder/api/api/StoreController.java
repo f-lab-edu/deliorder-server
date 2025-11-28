@@ -2,13 +2,17 @@ package com.deliorder.api.api;
 
 import com.deliorder.api.api.dto.*;
 import com.deliorder.api.common.dto.ApiResponse;
+import com.deliorder.api.entity.MenuSection;
 import com.deliorder.api.entity.Store;
+import com.deliorder.api.service.MenuSectionService;
 import com.deliorder.api.service.StoreService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/stores")
@@ -16,6 +20,7 @@ import java.util.Arrays;
 public class StoreController {
 
     private final StoreService storeService;
+    private final MenuSectionService menuSectionService;
 
     @GetMapping
     public ResponseEntity<ApiResponse<StoreData>> getStores(@ModelAttribute StoreFilterRequest filter) {
@@ -41,9 +46,9 @@ public class StoreController {
                 .hasNext(true)
                 .build();
 
-        ApiResponse<StoreData> res = ApiResponse.success("가게 목록 조회 성공", storeData);
+        ApiResponse<StoreData> responseBody = ApiResponse.success("가게 목록 조회 성공", storeData);
 
-        return ResponseEntity.ok(res);
+        return ResponseEntity.ok(responseBody);
     }
 
     @GetMapping("/{id}")
@@ -55,6 +60,16 @@ public class StoreController {
         return ResponseEntity.ok(responseBody);
     }
 
-//    @GetMapping("/{id}/menus")
-//    public ResponseEntity<ApiResponse<>>
+    @GetMapping("/{id}/menus")
+    public ResponseEntity<ApiResponse<MenuListResponse>> getMenuList(@PathVariable("id") Long storeId) {
+
+        List<MenuSection> menuSections = menuSectionService.findAllMenuList(storeId);
+        List<MenuSectionResponse> sectionResponses = menuSections.stream()
+                .map(MenuSectionResponse::from)
+                .collect(Collectors.toList());
+        MenuListResponse menuList = MenuListResponse.from(sectionResponses);
+        ApiResponse<MenuListResponse> responseBody = ApiResponse.success("메뉴 목록 조회 성공", menuList);
+
+        return ResponseEntity.ok(responseBody);
+    }
 }

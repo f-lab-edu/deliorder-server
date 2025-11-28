@@ -46,4 +46,5 @@ public class Store {
     @OneToMany(mappedBy = "store")
     @Builder.Default
     private List<DeliveryOption> deliveryOptions = new ArrayList<>();
+
 }
