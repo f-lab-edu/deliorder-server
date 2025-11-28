@@ -1,6 +1,5 @@
 package com.deliorder.api.api.dto;
 
-import com.deliorder.api.entity.DeliveryOption;
 import com.deliorder.api.entity.Store;
 import com.deliorder.api.entity.StoreStatus;
 import lombok.Builder;
@@ -21,12 +20,12 @@ public class StoreDetailData {
     private StoreStatus storeStatus;
     private String storeStatusLabel;
     private List<String> categories;
-    private List<DeliveryOptionDto> deliveryOptions;
+    private List<DeliveryOptionResponse> deliveryOptions;
 
     public static StoreDetailData from(Store store) {
 
-        List<DeliveryOptionDto> deliveryOptions = store.getDeliveryOptions().stream()
-                .map(DeliveryOptionDto::from)
+        List<DeliveryOptionResponse> deliveryOptions = store.getDeliveryOptions().stream()
+                .map(DeliveryOptionResponse::from)
                 .collect(Collectors.toList());
 
         return StoreDetailData.builder()
