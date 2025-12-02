@@ -27,8 +27,4 @@ public class MenuSection {
     private String name;
 
     private int displayOrder;
-
-    @OneToMany(fetch = FetchType.LAZY)
-    @Builder.Default
-    private List<Menu> menus = new ArrayList<>();
 }
