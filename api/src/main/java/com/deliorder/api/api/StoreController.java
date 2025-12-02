@@ -7,6 +7,7 @@ import com.deliorder.api.entity.Store;
 import com.deliorder.api.service.MenuSectionService;
 import com.deliorder.api.service.StoreService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/v1/stores")
 @RequiredArgsConstructor
+@Slf4j
 public class StoreController {
 
     private final StoreService storeService;
@@ -55,20 +57,9 @@ public class StoreController {
     public ResponseEntity<ApiResponse<StoreDetailData>> getStoreDetail(@PathVariable("id") Long storeId) {
 
         Store store = storeService.findStore(storeId);
-        ApiResponse<StoreDetailData> responseBody = ApiResponse.success("가게 상세 조회 성공", StoreDetailData.from(store));
-
-        return ResponseEntity.ok(responseBody);
-    }
-
-    @GetMapping("/{id}/menus")
-    public ResponseEntity<ApiResponse<MenuListResponse>> getMenuList(@PathVariable("id") Long storeId) {
-
         List<MenuSection> menuSections = menuSectionService.findAllMenuList(storeId);
-        List<MenuSectionResponse> sectionResponses = menuSections.stream()
-                .map(MenuSectionResponse::from)
-                .collect(Collectors.toList());
-        MenuListResponse menuList = MenuListResponse.from(sectionResponses);
-        ApiResponse<MenuListResponse> responseBody = ApiResponse.success("메뉴 목록 조회 성공", menuList);
+        StoreDetailData bodyData = StoreDetailData.from(store, menuSections);
+        ApiResponse<StoreDetailData> responseBody = ApiResponse.success("가게 상세 조회 성공", bodyData);
 
         return ResponseEntity.ok(responseBody);
     }
