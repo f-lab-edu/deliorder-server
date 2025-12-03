@@ -28,12 +28,6 @@ public class StoreDetailData {
 
     public static StoreDetailData from(Store store, List<MenuSection> menuSections) {
 
-        /**
-         * 1. deliveryOptions는 from으로 가공해서 세팅
-         * 2. menuSections 순회
-         * 3. menu_section_id와 store.menus에서 menu_section_id가 일치하면 from으로 바꿔서 넣는다.
-         */
-
         List<DeliveryOptionResponse> deliveryOptions = store.getDeliveryOptions().stream()
                 .map(DeliveryOptionResponse::from)
                 .collect(Collectors.toList());
