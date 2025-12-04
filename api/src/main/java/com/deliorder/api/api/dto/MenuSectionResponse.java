@@ -16,14 +16,7 @@ public class MenuSectionResponse {
     private String name;
     private List<MenuResponse> menus;
 
-    public static MenuSectionResponse from(MenuSection section, List<Menu> menus) {
-
-        List<MenuResponse> menuResponses = menus.stream()
-                .filter(menu -> menu.getMenuSectionId() != null)
-                .filter(menu -> Objects.equals(menu.getMenuSectionId(), section.getId()))
-                .map(MenuResponse::from)
-                .toList();
-
+    public static MenuSectionResponse from(MenuSection section, List<MenuResponse> menuResponses) {
         return MenuSectionResponse.builder()
                 .id(section.getId())
                 .name(section.getName())

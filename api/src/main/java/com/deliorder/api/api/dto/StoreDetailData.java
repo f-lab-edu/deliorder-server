@@ -8,8 +8,11 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
+
+import static java.util.stream.Collectors.*;
 
 @Getter
 @Builder
@@ -30,14 +33,22 @@ public class StoreDetailData {
 
         List<DeliveryOptionResponse> deliveryOptions = store.getDeliveryOptions().stream()
                 .map(DeliveryOptionResponse::from)
-                .collect(Collectors.toList());
+                .collect(toList());
 
         List<Menu> menus = store.getMenus();
         List<MenuSectionResponse> menuSectionResponses = new ArrayList<>();
 
         if (menuSections != null && !menuSections.isEmpty()) {
+            Map<Long, List<MenuResponse>> menusResponsesBySectionId = menus.stream()
+                    .collect(groupingBy(
+                            Menu::getMenuSectionId,
+                            mapping(MenuResponse::from, toList()))
+                    );
+
             menuSectionResponses = menuSections.stream()
-                    .map(menuSection -> MenuSectionResponse.from(menuSection, menus))
+                    .map(menuSection -> MenuSectionResponse.from(
+                            menuSection,
+                            menusResponsesBySectionId.getOrDefault(menuSection.getId(), Collections.emptyList())))
                     .toList();
         }
 
