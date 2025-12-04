@@ -7,4 +7,7 @@ plugins {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     runtimeOnly 'com.mysql:mysql-connector-j'
+    implementation platform("io.awspring.cloud:spring-cloud-aws-dependencies:3.3.0")
+    implementation 'io.awspring.cloud:spring-cloud-aws-starter-s3'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
 }

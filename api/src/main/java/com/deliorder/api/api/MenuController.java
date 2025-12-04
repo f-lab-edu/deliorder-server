@@ -1,15 +1,16 @@
 package com.deliorder.api.api;
 
 import com.deliorder.api.api.dto.MenuDetailResponse;
+import com.deliorder.api.api.dto.PresignedUrlRequest;
+import com.deliorder.api.api.dto.PresignedUrlResponse;
 import com.deliorder.api.common.dto.ApiResponse;
 import com.deliorder.api.entity.Menu;
 import com.deliorder.api.service.MenuService;
+import com.deliorder.api.service.S3Service;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/menus")
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class MenuController {
 
     private final MenuService menuService;
+    private final S3Service s3Service;
 
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<MenuDetailResponse>> getMenuDetail(@PathVariable("id") Long menuId) {
@@ -29,4 +31,11 @@ public class MenuController {
         return ResponseEntity.ok(responseBody);
     }
 
+    @PostMapping("/{id}/image/upload")
+    public ResponseEntity<ApiResponse<PresignedUrlResponse>> generatePresignedUrl(
+            @PathVariable("id") Long menuId,
+            @RequestBody @Valid PresignedUrlRequest request
+            ) {
+        return ResponseEntity.ok(ApiResponse.success("", s3Service.createPresignedGetUrl(menuId, request)));
+    }
 }

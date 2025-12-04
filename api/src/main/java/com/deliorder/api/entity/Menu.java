@@ -24,9 +24,8 @@ public class Menu {
     @JoinColumn(name = "store_id", nullable = false)
     private Store store;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "menu_section_id", nullable = true)
-    private MenuSection menuSection;
+    @Column(nullable = false)
+    private Long menuSectionId;
 
     private String name;
 

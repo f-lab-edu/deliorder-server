@@ -5,6 +5,7 @@ import com.deliorder.api.api.dto.DeliveryOptionResponse;
 import com.deliorder.api.api.dto.StoreData;
 import com.deliorder.api.api.dto.StoreDetailData;
 import com.deliorder.api.api.dto.StoreItem;
+import com.deliorder.api.entity.StoreStatus;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,7 +87,7 @@ class StoreControllerTest {
         assertThat(data.getReviewCount()).isEqualTo(690);
         assertThat(data.getMinOrderPrice()).isEqualTo(14000);
         assertThat(data.getDistance()).isEqualTo(0.48);
-        assertThat(data.getStoreStatus()).isEqualTo("PREPARING");
+        assertThat(data.getStoreStatus()).isEqualTo(StoreStatus.BREAK);
         assertThat(data.getStoreStatusLabel()).isEqualTo("준비 중이에요");
 
         List<String> categories = data.getCategories();
