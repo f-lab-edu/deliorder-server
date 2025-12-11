@@ -10,8 +10,11 @@ spring:
       credentials:
         accessKey: ${AWS_ACCESS_KEY}
         secretKey: ${AWS_SECRET_KEY}
-      region:
-        static: ap-northeast-2
+      region: ap-northeast-2
       s3:
         bucket: deliorder-s3
         presigned-url-expiration: 10
+
+  autoconfigure:
+    exclude:
+      - io.awspring.cloud.autoconfigure.s3.S3AutoConfiguration
