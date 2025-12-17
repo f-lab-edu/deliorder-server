@@ -6,10 +6,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @Getter
 @RequiredArgsConstructor
-@ConfigurationProperties("spring.data.redis")
-public class RedisProperties {
-
-    private final String host;
-    private final int port;
-    private final String password;
+@ConfigurationProperties("jwt")
+public class JwtProperties {
+    private final String secret;
 }
