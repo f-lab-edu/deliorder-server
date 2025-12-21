@@ -17,10 +17,13 @@ public enum ErrorCode {
 
     // AUTH
     INVALID_USER_ROLE(HttpStatus.BAD_REQUEST, "유효하지 않은 사용자 권한입니다."),
+    MISSING_REFRESH_TOKEN(HttpStatus.BAD_REQUEST, "요청 쿠키에 리프레시 토큰이 존재하지 않습니다."),
+    INVALID_REFRESH_TOKEN_OWNER(HttpStatus.UNAUTHORIZED, "RefreshToken의 소유자가 일치하지 않습니다."),
 
     // USER
     DUPLICATE_EMAIL(HttpStatus.CONFLICT, "이미 가입된 이메일 입니다."),
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 사용자를 찾을 수 없습니다."),
+    EXPIRED_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "리프레시 토큰이 만료되었습니다."),
 
     // REDIS
     REDIS_CONNECTION_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Redis 연결 중 오류가 발생했습니다.");

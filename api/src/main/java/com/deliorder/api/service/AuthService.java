@@ -43,6 +43,19 @@ public class AuthService {
             throw new HandledException(ErrorCode.AUTHORIZATION, "비밀번호가 일치하지 않습니다.");
         }
 
+        return createAuthTokens(user);
+    }
+
+    public AuthTokens refreshToken(String refreshToken, Long userId) {
+        Long validatedUserId = tokenService.validateRefreshToken(refreshToken, userId);
+        tokenService.deleteRefreshToken(refreshToken);
+
+        User user = userService.getUser(validatedUserId);
+
+        return createAuthTokens(user);
+    }
+
+    private AuthTokens createAuthTokens(User user) {
         String accessToken = tokenService.createAccessToken(user);
         String refreshToken = tokenService.createRefreshToken(user);
 

@@ -52,4 +52,38 @@ public class TokenService {
         return refreshToken;
     }
 
+    public Long validateRefreshToken(String refreshToken, Long userId) {
+        String redisKey = RedisConstants.REFRESH_TOKEN_KEY_PREFIX + refreshToken;
+
+        try {
+            String userIdValue = redisTemplate.opsForValue().get(redisKey);
+
+            if (userIdValue == null) {
+                throw new HandledException(ErrorCode.EXPIRED_REFRESH_TOKEN);
+            }
+
+            if (!userIdValue.equals(String.valueOf(userId))) {
+                throw new HandledException(ErrorCode.INVALID_REFRESH_TOKEN_OWNER);
+            }
+
+            return Long.valueOf(userIdValue);
+        } catch (RedisConnectionFailureException | RedisSystemException e) {
+            log.error("[Redis] RefreshToken 검증 중 Redis 오류 발생", e);
+            throw new HandledException(ErrorCode.REDIS_CONNECTION_ERROR);
+        }
+    }
+
+    public void deleteRefreshToken(String refreshToken) {
+        String redisKey = RedisConstants.REFRESH_TOKEN_KEY_PREFIX + refreshToken;
+
+        try {
+            Boolean deleted = redisTemplate.delete(redisKey);
+
+            if (!deleted) {
+                log.warn("[Redis] RefreshToken 삭제 실패. 토큰값: {}", refreshToken);
+            }
+        } catch (RedisConnectionFailureException | RedisSystemException e) {
+            log.warn("[Redis] RefreshToken 삭제 중 Redis 오류 발생: {}", e.getMessage());
+        }
+    }
 }

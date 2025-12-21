@@ -17,4 +17,9 @@ public class UserService {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new HandledException(ErrorCode.USER_NOT_FOUND));
     }
+
+    public User getUser(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new HandledException(ErrorCode.USER_NOT_FOUND));
+    }
 }
