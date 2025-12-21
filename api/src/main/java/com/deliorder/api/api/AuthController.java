@@ -11,6 +11,7 @@ import com.deliorder.api.common.exception.HandledException;
 import com.deliorder.api.common.util.CookieUtil;
 import com.deliorder.api.entity.User;
 import com.deliorder.api.service.AuthService;
+import com.deliorder.api.service.TokenService;
 import com.deliorder.api.service.result.AuthTokens;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     private final AuthService authService;
+    private final TokenService tokenService;
 
     @PostMapping("/signup")
     public ResponseEntity<ApiResponse<SignupResponse>> signup(@Valid @RequestBody SignupRequest request) {
@@ -56,6 +58,16 @@ public class AuthController {
         AuthTokens authTokens = authService.refreshToken(refreshToken, authUser.getId());
         CookieUtil.addRefreshTokenToCookie(response, authTokens.getRefreshToken());
         return ResponseEntity.ok(ApiResponse.success("", AccessTokenResponse.fromAuthTokens(authTokens)));
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<ApiResponse<String>> logout(
+            @CookieValue(name = CookieUtil.REFRESH_TOKEN_COOKIE_NAME, required = false) String refreshToken,
+            HttpServletResponse response
+    ) {
+        tokenService.deleteRefreshToken(refreshToken);
+        CookieUtil.deleteRefreshTokenCookie(response);
+        return ResponseEntity.ok(ApiResponse.success("", null));
     }
 
     private void checkRefreshTokenExists(String refreshToken) {

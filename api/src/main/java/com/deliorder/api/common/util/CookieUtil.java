@@ -18,4 +18,13 @@ public class CookieUtil {
         cookie.setMaxAge((int) SecurityConstants.REFRESH_TOKEN_TTL);
         response.addCookie(cookie);
     }
+
+    public static void deleteRefreshTokenCookie(HttpServletResponse response) {
+        Cookie cookie = new Cookie(REFRESH_TOKEN_COOKIE_NAME, null);
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true);
+        cookie.setPath("/");
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+    }
 }
