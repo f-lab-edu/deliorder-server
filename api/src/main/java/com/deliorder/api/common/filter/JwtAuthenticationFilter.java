@@ -53,18 +53,22 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 String message = "유효하지 않은 JWT 토큰입니다.";
                 log.error(message, e);
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, message);
+                return;
             } catch (ExpiredJwtException e) {
                 String message = "만료된 JWT 토큰입니다.";
                 log.error(message, e);
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, message);
+                return;
             } catch (UnsupportedJwtException e) {
                 String message = "지원되지 않는 JWT 토큰입니다.";
                 log.error(message, e);
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST, message);
+                return;
             } catch (Exception e) {
                 String message = "Internal server error";
                 log.error(message, e);
                 response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message);
+                return;
             }
         }
 
