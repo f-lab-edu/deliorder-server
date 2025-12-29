@@ -1,6 +1,6 @@
 package com.deliorder.api.common.dto;
 
-import com.deliorder.api.entity.UserRole;
+import com.deliorder.api.enums.UserRole;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

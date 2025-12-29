@@ -2,7 +2,7 @@ package com.deliorder.api.api.dto;
 
 import com.deliorder.api.common.constants.RegexConstants;
 import com.deliorder.api.entity.User;
-import com.deliorder.api.entity.UserRole;
+import com.deliorder.api.enums.UserRole;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

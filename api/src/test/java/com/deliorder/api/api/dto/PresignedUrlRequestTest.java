@@ -1,6 +1,6 @@
 package com.deliorder.api.api.dto;
 
-import com.deliorder.api.entity.ImageFileType;
+import com.deliorder.api.enums.ImageFileType;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;

@@ -1,5 +1,6 @@
 package com.deliorder.api.entity;
 
+import com.deliorder.api.enums.DeliveryType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,4 +1,4 @@
-package com.deliorder.api.entity;
+package com.deliorder.api.enums;
 
 import com.deliorder.api.common.exception.ErrorCode;
 import com.deliorder.api.common.exception.HandledException;

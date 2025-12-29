@@ -5,7 +5,7 @@ import com.deliorder.api.api.dto.DeliveryOptionResponse;
 import com.deliorder.api.api.dto.StoreData;
 import com.deliorder.api.api.dto.StoreDetailData;
 import com.deliorder.api.api.dto.StoreItem;
-import com.deliorder.api.entity.StoreStatus;
+import com.deliorder.api.enums.StoreStatus;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

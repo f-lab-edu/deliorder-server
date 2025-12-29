@@ -1,7 +1,7 @@
 package com.deliorder.api.api.dto;
 
 import com.deliorder.api.common.constants.RegexConstants;
-import com.deliorder.api.entity.ImageFileType;
+import com.deliorder.api.enums.ImageFileType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;

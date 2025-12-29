@@ -1,5 +1,6 @@
 package com.deliorder.api.entity;
 
+import com.deliorder.api.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
