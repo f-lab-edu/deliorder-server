@@ -1,5 +1,6 @@
 package com.deliorder.api.entity;
 
+import com.deliorder.api.common.entity.BaseEntity;
 import com.deliorder.api.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -12,11 +13,7 @@ import java.time.LocalDateTime;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class User {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class User extends BaseEntity {
 
     @Column(nullable = false)
     private String email;
@@ -42,9 +39,8 @@ public class User {
     private LocalDateTime deletedAt;
 
     @Builder
-    public User(Long id, String email, String password, String name, String nickname, String phoneNumber,
+    public User(String email, String password, String name, String nickname, String phoneNumber,
                 UserRole userRole, String imageUrl) {
-        this.id = id;
         this.email = email;
         this.password = password;
         this.name = name;

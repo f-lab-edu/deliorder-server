@@ -1,26 +1,21 @@
 package com.deliorder.api.entity;
 
+import com.deliorder.api.common.entity.BaseEntity;
 import com.deliorder.api.enums.DiscountType;
 import com.deliorder.api.enums.StoreStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Getter
-@Builder
-@NoArgsConstructor
+@SuperBuilder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class Store {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Store extends BaseEntity {
 
     @Column(nullable = false)
     private String name;
