@@ -7,6 +7,7 @@ import com.deliorder.api.common.dto.ApiResponse;
 import com.deliorder.api.entity.Menu;
 import com.deliorder.api.service.MenuService;
 import com.deliorder.api.service.S3Service;
+import com.deliorder.api.service.command.PresignedUrlCommand;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -36,6 +37,7 @@ public class MenuController {
             @PathVariable("id") Long menuId,
             @RequestBody @Valid PresignedUrlRequest request
             ) {
-        return ResponseEntity.ok(ApiResponse.success("", s3Service.createPresignedGetUrl(menuId, request)));
+        PresignedUrlCommand command = PresignedUrlRequest.toCommand(request);
+        return ResponseEntity.ok(ApiResponse.success("", s3Service.createPresignedGetUrl("menu", menuId, command)));
     }
 }
