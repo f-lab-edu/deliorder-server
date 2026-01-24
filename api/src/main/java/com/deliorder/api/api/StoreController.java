@@ -2,21 +2,26 @@ package com.deliorder.api.api;
 
 import com.deliorder.api.api.dto.*;
 import com.deliorder.api.common.dto.ApiResponse;
+import com.deliorder.api.common.dto.AuthUser;
 import com.deliorder.api.entity.MenuSection;
 import com.deliorder.api.entity.Store;
+import com.deliorder.api.enums.UserRole;
 import com.deliorder.api.service.MenuSectionService;
 import com.deliorder.api.service.StoreService;
+import com.deliorder.api.service.command.StoreCreateCommand;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/v1/stores")
+@RequestMapping("/api")
 @RequiredArgsConstructor
 @Slf4j
 public class StoreController {
@@ -24,7 +29,19 @@ public class StoreController {
     private final StoreService storeService;
     private final MenuSectionService menuSectionService;
 
-    @GetMapping
+    @PostMapping("/v1/owner/stores")
+    @Secured(UserRole.Authority.OWNER)
+    public ResponseEntity<ApiResponse<StoreCreateResponse>> createStore(
+            @Valid @RequestBody StoreCreateRequest request,
+            @AuthenticationPrincipal AuthUser authUser
+    ) {
+        StoreCreateCommand command = StoreCreateRequest.toCommand(request);
+        Store store = storeService.createStore(authUser, command);
+        StoreCreateResponse data = StoreCreateResponse.from(store);
+        return ResponseEntity.ok(ApiResponse.success("", data));
+    }
+
+    @GetMapping("/v1/stores")
     public ResponseEntity<ApiResponse<StoreData>> getStores(@ModelAttribute StoreFilterRequest filter) {
         StoreItem store1 = StoreItem.builder()
                 .id(1001L).name("하이닭").rating(4.9).reviewCount(172).deliveryFee(1400)
@@ -53,7 +70,7 @@ public class StoreController {
         return ResponseEntity.ok(responseBody);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/v1/stores/{id}")
     public ResponseEntity<ApiResponse<StoreDetailData>> getStoreDetail(@PathVariable("id") Long storeId) {
 
         Store store = storeService.findStore(storeId);

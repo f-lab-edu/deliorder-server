@@ -18,7 +18,6 @@ public class Menu extends BaseEntity {
     @JoinColumn(name = "store_id", nullable = false)
     private Store store;
 
-    @Column(nullable = false)
     private Long menuSectionId;
 
     private String name;

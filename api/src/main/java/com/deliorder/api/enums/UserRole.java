@@ -10,9 +10,9 @@ import java.util.Arrays;
 @Getter
 @RequiredArgsConstructor
 public enum UserRole {
-    ROLE_USER("ROLE_USER"),
-    ROLE_OWNER("ROLE_OWNER"),
-    ROLE_ADMIN("ROLE_ADMIN");
+    ROLE_USER(Authority.USER),
+    ROLE_OWNER(Authority.OWNER),
+    ROLE_ADMIN(Authority.ADMIN);
 
     private final String userRole;
 
@@ -21,5 +21,11 @@ public enum UserRole {
                 .filter(r -> r.name().equalsIgnoreCase(userRole))
                 .findFirst()
                 .orElseThrow(() -> new HandledException(ErrorCode.INVALID_USER_ROLE));
+    }
+
+    public static class Authority {
+        public static final String USER = "ROLE_USER";
+        public static final String OWNER = "ROLE_OWNER";
+        public static final String ADMIN = "ROLE_ADMIN";
     }
 }

@@ -1,5 +1,6 @@
 package com.deliorder.api.entity;
 
+import com.deliorder.api.common.dto.AuthUser;
 import com.deliorder.api.common.entity.BaseEntity;
 import com.deliorder.api.enums.UserRole;
 import jakarta.persistence.*;
@@ -39,8 +40,9 @@ public class User extends BaseEntity {
     private LocalDateTime deletedAt;
 
     @Builder
-    public User(String email, String password, String name, String nickname, String phoneNumber,
+    public User(Long id, String email, String password, String name, String nickname, String phoneNumber,
                 UserRole userRole, String imageUrl) {
+        this.id = id;
         this.email = email;
         this.password = password;
         this.name = name;
@@ -48,6 +50,15 @@ public class User extends BaseEntity {
         this.phoneNumber = phoneNumber;
         this.userRole = userRole;
         this.imageUrl = imageUrl;
+    }
+
+    public static User fromAuthUser(AuthUser authUser) {
+        return User.builder()
+                .id(authUser.getId())
+                .email(authUser.getEmail())
+                .nickname(authUser.getNickname())
+                .userRole(UserRole.of(authUser.getAuthorities().iterator().next().getAuthority()))
+                .build();
     }
 
     public void updateAlarmSetting(boolean isAlarmEnabled){
