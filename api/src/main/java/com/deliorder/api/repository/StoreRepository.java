@@ -1,6 +1,7 @@
 package com.deliorder.api.repository;
 
 import com.deliorder.api.entity.Store;
+import com.deliorder.api.entity.User;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -16,4 +17,6 @@ public interface StoreRepository extends JpaRepository<Store, Long> {
 
     @EntityGraph(attributePaths = {"menus", "deliveryOptions"})
     Optional<Store> findById(Long id);
+
+    Optional<Store> findByIdAndUser(Long id, User user);
 }

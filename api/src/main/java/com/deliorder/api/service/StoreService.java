@@ -7,12 +7,15 @@ import com.deliorder.api.entity.Category;
 import com.deliorder.api.entity.Store;
 import com.deliorder.api.entity.User;
 import com.deliorder.api.repository.StoreRepository;
+import com.deliorder.api.repository.UserRepository;
 import com.deliorder.api.service.command.StoreCreateCommand;
 import com.deliorder.api.service.command.StoreUpdateCommand;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -21,6 +24,7 @@ public class StoreService {
 
     private final StoreRepository storeRepository;
     private final CategoryService categoryService;
+    private final UserRepository userRepository;
 
     public Store createStore(AuthUser authUser, StoreCreateCommand command) {
         User user = User.fromAuthUser(authUser);
@@ -75,6 +79,16 @@ public class StoreService {
         }
 
         return store;
+    }
+
+    @Transactional
+    public void deleteStore(Long storeId, AuthUser authUser) {
+        User user = userRepository.findById(authUser.getId())
+                .orElseThrow(() -> new HandledException(ErrorCode.USER_NOT_FOUND));
+        Store store = storeRepository.findByIdAndUser(storeId, user)
+                .orElseThrow(() -> new HandledException(ErrorCode.STORE_NOT_FOUND));
+
+        store.delete();
     }
 
     private static void validateStoreOwnerId(Store store, User user) {

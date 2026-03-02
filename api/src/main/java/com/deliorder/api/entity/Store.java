@@ -1,6 +1,8 @@
 package com.deliorder.api.entity;
 
 import com.deliorder.api.common.entity.BaseEntity;
+import com.deliorder.api.common.exception.ErrorCode;
+import com.deliorder.api.common.exception.HandledException;
 import com.deliorder.api.enums.DiscountType;
 import com.deliorder.api.enums.StoreStatus;
 import jakarta.persistence.*;
@@ -109,5 +111,12 @@ public class Store extends BaseEntity {
 
     public void updateCategory(Category category) {
         this.category = category;
+    }
+
+    public void delete() {
+        if (this.isDeleted()) {
+            throw new HandledException(ErrorCode.STORE_ALREADY_DELETED);
+        }
+        this.softDelete();
     }
 }

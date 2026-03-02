@@ -55,6 +55,16 @@ public class StoreController {
         return ResponseEntity.ok(ApiResponse.success("", data));
     }
 
+    @DeleteMapping("/v1/owner/stores/{id}")
+    @Secured(UserRole.Authority.OWNER)
+    public ResponseEntity<ApiResponse<Void>> deleteStore(
+            @PathVariable("id") Long storeId,
+            @AuthenticationPrincipal AuthUser authUser
+    ) {
+        storeService.deleteStore(storeId, authUser);
+        return ResponseEntity.noContent().build();
+    }
+
     @GetMapping("/v1/stores")
     public ResponseEntity<ApiResponse<StoreData>> getStores(@ModelAttribute StoreFilterRequest filter) {
         StoreItem store1 = StoreItem.builder()

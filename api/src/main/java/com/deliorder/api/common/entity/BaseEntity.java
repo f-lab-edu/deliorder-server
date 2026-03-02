@@ -29,4 +29,19 @@ public abstract class BaseEntity {
     @LastModifiedDate
     @Column(nullable = false, name = "updated_at")
     private LocalDateTime updatedAt;
+
+    private LocalDateTime deletedAt;
+
+
+    protected void softDelete() {
+        this.deletedAt = LocalDateTime.now();
+    }
+
+    protected void restoreDelete() {
+        this.deletedAt = null;
+    }
+
+    public boolean isDeleted() {
+        return deletedAt != null;
+    }
 }
