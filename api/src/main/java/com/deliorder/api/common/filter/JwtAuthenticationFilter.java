@@ -5,7 +5,7 @@ import com.deliorder.api.common.constants.SecurityConstants;
 import com.deliorder.api.common.dto.AuthUser;
 import com.deliorder.api.common.security.token.JwtAuthenticationToken;
 import com.deliorder.api.common.util.JwtUtil;
-import com.deliorder.api.entity.UserRole;
+import com.deliorder.api.enums.UserRole;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;

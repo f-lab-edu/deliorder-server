@@ -4,7 +4,7 @@ import com.deliorder.api.common.config.JwtProperties;
 import com.deliorder.api.common.constants.SecurityConstants;
 import com.deliorder.api.common.exception.ErrorCode;
 import com.deliorder.api.common.exception.HandledException;
-import com.deliorder.api.entity.UserRole;
+import com.deliorder.api.enums.UserRole;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;

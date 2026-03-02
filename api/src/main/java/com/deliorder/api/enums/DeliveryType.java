@@ -1,4 +1,4 @@
-package com.deliorder.api.entity;
+package com.deliorder.api.enums;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

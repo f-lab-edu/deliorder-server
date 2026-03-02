@@ -1,6 +1,6 @@
 package com.deliorder.api.api.dto;
 
-import com.deliorder.api.entity.DeliveryType;
+import com.deliorder.api.enums.DeliveryType;
 import com.deliorder.api.api.type.StoreSortType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

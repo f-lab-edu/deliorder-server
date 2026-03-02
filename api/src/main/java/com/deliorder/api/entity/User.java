@@ -1,5 +1,8 @@
 package com.deliorder.api.entity;
 
+import com.deliorder.api.common.dto.AuthUser;
+import com.deliorder.api.common.entity.BaseEntity;
+import com.deliorder.api.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -11,11 +14,7 @@ import java.time.LocalDateTime;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class User {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class User extends BaseEntity {
 
     @Column(nullable = false)
     private String email;
@@ -51,6 +50,15 @@ public class User {
         this.phoneNumber = phoneNumber;
         this.userRole = userRole;
         this.imageUrl = imageUrl;
+    }
+
+    public static User fromAuthUser(AuthUser authUser) {
+        return User.builder()
+                .id(authUser.getId())
+                .email(authUser.getEmail())
+                .nickname(authUser.getNickname())
+                .userRole(UserRole.of(authUser.getAuthorities().iterator().next().getAuthority()))
+                .build();
     }
 
     public void updateAlarmSetting(boolean isAlarmEnabled){

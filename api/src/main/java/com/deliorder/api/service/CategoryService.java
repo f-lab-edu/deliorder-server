@@ -1,5 +1,7 @@
 package com.deliorder.api.service;
 
+import com.deliorder.api.common.exception.ErrorCode;
+import com.deliorder.api.common.exception.HandledException;
 import com.deliorder.api.entity.Category;
 import com.deliorder.api.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,5 +17,10 @@ public class CategoryService {
 
     public List<Category> findAllCategories() {
         return categoryRepository.findAll();
+    }
+
+    public Category findCategory(Long categoryId) {
+        return categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new HandledException(ErrorCode.CATEGORY_NOT_FOUND));
     }
 }

@@ -1,47 +1,51 @@
 package com.deliorder.api.entity;
 
+import com.deliorder.api.common.entity.BaseEntity;
+import com.deliorder.api.common.exception.ErrorCode;
+import com.deliorder.api.common.exception.HandledException;
+import com.deliorder.api.enums.DiscountType;
+import com.deliorder.api.enums.StoreStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Entity
 @Getter
-@Builder
-@NoArgsConstructor
+@SuperBuilder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class Store {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Store extends BaseEntity {
 
     @Column(nullable = false)
     private String name;
+    private String description;
+    private String imageUrl;
+    @Column(nullable = false)
+    private String address;
+    @Column(nullable = false)
+    private LocalTime startTime;
+    @Column(nullable = false)
+    private LocalTime endTime;
 
-    private Double rating;
-    private Integer reviewCount;
+    private Double rating = 0.0;
+    private Integer reviewCount = 0;
 
-    private Integer minOrderPrice;
+    private Integer minOrderPrice = 0;
 
     @Enumerated(EnumType.STRING)
     private DiscountType discountType;
 
-    private Integer discountAmount;
+    private Integer discountAmount = 0;
 
     @Enumerated(EnumType.STRING)
     private StoreStatus storeStatus;
 
     private String storeStatusLabel;
-
-    private String address;
-
-    private Double latitude;
-    private Double longitude;
 
     @OneToMany(mappedBy = "store")
     @Builder.Default
@@ -51,5 +55,68 @@ public class Store {
     @Builder.Default
     private List<Menu> menus = new ArrayList<>();
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user; // UserRole: ROLE_OWNER
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id", nullable = false)
+    private Category category;
+
+    public Long getUserId() {
+        return Optional.ofNullable(this.user)
+                .map(BaseEntity::getId)
+                .orElse(null);
+    }
+
+    public Long getCategoryId() {
+        return Optional.ofNullable(this.category)
+                .map(Category::getId)
+                .orElse(null);
+    }
+
+    public String getCategoryLabel() {
+        return Optional.ofNullable(this.category)
+                .map(Category::getLabel)
+                .orElse(null);
+    }
+
+    public void updateName(String name) {
+        this.name = name;
+    }
+
+    public void updateDescription(String description) {
+        this.description = description;
+    }
+
+    public void updateImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public void updateAddress(String address) {
+        this.address = address;
+    }
+
+    public void updateStartTime(LocalTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public void updateEndTime(LocalTime endTime) {
+        this.endTime = endTime;
+    }
+
+    public void updateMinOrderPrice(Integer price) {
+        this.minOrderPrice = price;
+    }
+
+    public void updateCategory(Category category) {
+        this.category = category;
+    }
+
+    public void delete() {
+        if (this.isDeleted()) {
+            throw new HandledException(ErrorCode.STORE_ALREADY_DELETED);
+        }
+        this.softDelete();
+    }
 }

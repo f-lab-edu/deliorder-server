@@ -1,7 +1,8 @@
 package com.deliorder.api.api.dto;
 
 import com.deliorder.api.common.constants.RegexConstants;
-import com.deliorder.api.entity.ImageFileType;
+import com.deliorder.api.enums.ImageFileType;
+import com.deliorder.api.service.command.PresignedUrlCommand;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -21,4 +22,11 @@ public class PresignedUrlRequest {
 
     @NotNull(message = "파일 타입은 필수입니다.")
     private ImageFileType fileType;
+
+    public static PresignedUrlCommand toCommand(PresignedUrlRequest request) {
+        return PresignedUrlCommand.builder()
+                .fileName(request.getFileName())
+                .fileType(request.getFileType())
+                .build();
+    }
 }

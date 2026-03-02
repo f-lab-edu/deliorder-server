@@ -1,7 +1,7 @@
 package com.deliorder.api.api.dto;
 
 
-import com.deliorder.api.entity.UserRole;
+import com.deliorder.api.enums.UserRole;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;

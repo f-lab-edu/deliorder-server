@@ -1,10 +1,10 @@
 package com.deliorder.api.service;
 
-import com.deliorder.api.api.dto.PresignedUrlRequest;
 import com.deliorder.api.api.dto.PresignedUrlResponse;
 import com.deliorder.api.common.config.S3Properties;
 import com.deliorder.api.common.exception.ErrorCode;
 import com.deliorder.api.common.exception.HandledException;
+import com.deliorder.api.service.command.PresignedUrlCommand;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -29,18 +29,18 @@ public class S3Service {
     private static final String S3_URL_PREFIX = "https://";
     private static final String S3_URL_SUFFIX = ".s3.amazonaws.com/";
 
-    public PresignedUrlResponse createPresignedGetUrl(Long menuId, PresignedUrlRequest request) {
+    public PresignedUrlResponse createPresignedGetUrl(String target, Long targetId, PresignedUrlCommand command) {
         try {
             String bucketName = s3Properties.getS3().getBucket();
             Long presignedUrlExpiration = s3Properties.getS3().getPresignedUrlExpiration();
 
-            String fileExtension = extractExtension(request.getFileName());
-            String key = generateKey(menuId, fileExtension);
+            String fileExtension = extractExtension(command.getFileName());
+            String key = generateKey(target, targetId, fileExtension);
 
             PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                     .bucket(bucketName)
                     .key(key)
-                    .contentType(request.getFileType().getMimeType())
+                    .contentType(command.getFileType().getMimeType())
                     .build();
 
             PresignedPutObjectRequest presignedRequest = s3Presigner.presignPutObject(
@@ -64,8 +64,8 @@ public class S3Service {
         }
     }
 
-    private static String generateKey(Long menuId, String fileExtension) {
-        return "menu" + menuId + "/" + UUID.randomUUID() + fileExtension;
+    private static String generateKey(String target, Long targetId, String fileExtension) {
+        return target + targetId + "/" + UUID.randomUUID() + fileExtension;
     }
 
     private String getFileUrl(String bucketName, String key) {

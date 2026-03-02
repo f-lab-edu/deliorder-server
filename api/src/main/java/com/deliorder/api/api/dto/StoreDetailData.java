@@ -3,7 +3,7 @@ package com.deliorder.api.api.dto;
 import com.deliorder.api.entity.Menu;
 import com.deliorder.api.entity.MenuSection;
 import com.deliorder.api.entity.Store;
-import com.deliorder.api.entity.StoreStatus;
+import com.deliorder.api.enums.StoreStatus;
 import lombok.Builder;
 import lombok.Getter;
 
