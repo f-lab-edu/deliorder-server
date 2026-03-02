@@ -54,11 +54,11 @@ public class Store extends BaseEntity {
     private List<Menu> menus = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user; // UserRole: ROLE_OWNER
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
+    @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
     public Long getUserId() {
@@ -77,5 +77,37 @@ public class Store extends BaseEntity {
         return Optional.ofNullable(this.category)
                 .map(Category::getLabel)
                 .orElse(null);
+    }
+
+    public void updateName(String name) {
+        this.name = name;
+    }
+
+    public void updateDescription(String description) {
+        this.description = description;
+    }
+
+    public void updateImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public void updateAddress(String address) {
+        this.address = address;
+    }
+
+    public void updateStartTime(LocalTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public void updateEndTime(LocalTime endTime) {
+        this.endTime = endTime;
+    }
+
+    public void updateMinOrderPrice(Integer price) {
+        this.minOrderPrice = price;
+    }
+
+    public void updateCategory(Category category) {
+        this.category = category;
     }
 }

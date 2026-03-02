@@ -9,6 +9,7 @@ import com.deliorder.api.enums.UserRole;
 import com.deliorder.api.service.MenuSectionService;
 import com.deliorder.api.service.StoreService;
 import com.deliorder.api.service.command.StoreCreateCommand;
+import com.deliorder.api.service.command.StoreUpdateCommand;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,6 +39,19 @@ public class StoreController {
         StoreCreateCommand command = StoreCreateRequest.toCommand(request);
         Store store = storeService.createStore(authUser, command);
         StoreCreateResponse data = StoreCreateResponse.from(store);
+        return ResponseEntity.ok(ApiResponse.success("", data));
+    }
+
+    @PatchMapping("/v1/owner/stores/{id}")
+    @Secured(UserRole.Authority.OWNER)
+    public ResponseEntity<ApiResponse<StoreUpdateResponse>> updateStore(
+            @PathVariable("id") Long storeId,
+            @Valid @RequestBody StoreUpdateRequest request,
+            @AuthenticationPrincipal AuthUser authUser
+    ) {
+        StoreUpdateCommand command = StoreUpdateRequest.toCommand(request);
+        Store store = storeService.updateStore(storeId, authUser, command);
+        StoreUpdateResponse data = StoreUpdateResponse.from(store);
         return ResponseEntity.ok(ApiResponse.success("", data));
     }
 

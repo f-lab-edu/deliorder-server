@@ -30,6 +30,7 @@ public enum ErrorCode {
 
     // STORE
     STORE_INVALID_TIME_RANGE(HttpStatus.BAD_REQUEST, "시작시간은 종료시간보다 이전이어야 합니다."),
+    STORE_FORBIDDEN(HttpStatus.FORBIDDEN, "해당 가게의 요청 권한이 없습니다."),
 
     // REDIS
     REDIS_CONNECTION_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Redis 연결 중 오류가 발생했습니다.");

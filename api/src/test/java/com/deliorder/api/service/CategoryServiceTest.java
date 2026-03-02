@@ -29,9 +29,9 @@ class CategoryServiceTest {
     @DisplayName("카테고리 목록 조회 성공")
     public void findAllCategories() throws Exception {
         //given
-        Category chicken = new Category("CHICKEN", "치킨", "/icons/chicken.png");
-        Category pizza = new Category("PIZZA", "피자", "/icons/pizza.png");
-        Category korean = new Category("KOREAN", "한식", "/icons/korean.png");
+        Category chicken = new Category(1L, "CHICKEN", "치킨", "/icons/chicken.png");
+        Category pizza = new Category(2L, "PIZZA", "피자", "/icons/pizza.png");
+        Category korean = new Category(3L, "KOREAN", "한식", "/icons/korean.png");
 
         List<Category> expectedCategories = Arrays.asList(chicken, pizza, korean);
 
